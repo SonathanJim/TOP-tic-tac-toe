@@ -81,9 +81,9 @@ function GameController(
     };
     //play round
     const playRound = (cell) => {
-        if (gameboard.board[cell].getValue() !== "") 
-            console.log("NOT A VALID MOVE!")
-         return;
+        // if (gameboard.board[cell].getValue() !== "") 
+        //     console.log("NOT A VALID MOVE!")
+        //  return;
         console.log (
             `Placing ${getActivePlayer().name}\'s ${getActivePlayer().token} in cell ${cell}...`
         )
@@ -104,14 +104,14 @@ function GameController(
 }
 
 const winConditions = [
-    [0,1,2]
-    [3,4,5]
-    [6,7,8]
-    [0,3,6]
-    [1,4,7]
-    [2,5,8]
-    [0,4,8]
-    [2,4,6]
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
 ]
 
 const game = GameController();
