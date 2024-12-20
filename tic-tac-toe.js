@@ -10,12 +10,9 @@ function Gameboard() {
     //method to add X/O 'token'
     //find an empty cell and change to an X or O
     const placeToken = (cell, player) => {
-        //filter to find available cells
-        const availableCells = board.filter((Cell) => Cell.getValue() === "").map((Cell) => Cell);
-        console.log(availableCells);
-        //otherwise valid cell, place token(addToken)
-        board[cell].addToken(player);
+        board[cell].addToken(player)
     };
+    
     //method to print board
     const printBoard = () => {
         const boardWithCellValues = board.map((Cell) => Cell.getValue());
@@ -53,19 +50,19 @@ function Cell() {
 ** GameController will control the turns and win conditions
 */
 function GameController(
-    playerOneName = "X",
-    playerTwoName = "O"
+    playerOneName = "Player One",
+    playerTwoName = "Player Two"
 ) {
     //board
-    const board = Gameboard();
+    const gameboard = Gameboard();
     //player objects(name & token properties)
     const players = [
         {
-            name: "Player One",
+            name: playerOneName,
             token: "X"
         },
         {
-            name: "Player Two",
+            name: playerTwoName,
             token: "O"
         }
     ];
@@ -79,15 +76,18 @@ function GameController(
     const getActivePlayer = () => activePlayer;
     //print who's turn to console
     const printNewRound = () => {
-        board.printBoard();
+        gameboard.printBoard();
         console.log(`${getActivePlayer().name}'s turn.`);
     };
     //play round
     const playRound = (cell) => {
+        if (gameboard.board[cell].getValue() !== "") 
+            console.log("NOT A VALID MOVE!")
+         return;
         console.log (
-            `Placing ${getActivePlayer}\'s ${getActivePlayer.token} in cell ${cell}...`
+            `Placing ${getActivePlayer().name}\'s ${getActivePlayer().token} in cell ${cell}...`
         )
-        board.placeToken(cell, getActivePlayer().token)
+        gameboard.placeToken(cell, getActivePlayer().token)
         /* check winner HERE */
 
         //change turn
