@@ -7,10 +7,10 @@ function Gameboard() {
     };
     //method to return gameboard to UI
     const getBoard = () => board;
-    //method to add X/O 'token'
+    //method to add X/O 'marker'
     //find an empty cell and change to an X or O
-    const placeToken = (cell, player) => {
-        board[cell].addToken(player)
+    const placeMarker = (cell, player) => {
+        board[cell].addMarker(player)
     };
     
     //method to print board
@@ -21,10 +21,21 @@ function Gameboard() {
     //return methods for interface
     return {
         getBoard, 
-        placeToken,
+        placeMarker,
         printBoard
     }
 };
+
+const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+]
 
 /*
 ** a cell is one square on the board can have 3 states
@@ -35,13 +46,13 @@ function Gameboard() {
 function Cell() {
     //clear cell
     let value = "";
-    //method to add token
-    const addToken = player => value = player;
+    //method to add marker
+    const addMarker = player => value = player;
     //method to get value
     const getValue = () => value;
     //return methods
     return {
-        addToken,
+        addMarker,
         getValue
     };
 }
@@ -55,15 +66,15 @@ function GameController(
 ) {
     //board
     const gameboard = Gameboard();
-    //player objects(name & token properties)
+    //player objects(name & marker properties)
     const players = [
         {
             name: playerOneName,
-            token: "X"
+            marker: "X"
         },
         {
             name: playerTwoName,
-            token: "O"
+            marker: "O"
         }
     ];
     //set activePlayer
@@ -81,19 +92,33 @@ function GameController(
     };
     //play round
     const playRound = (cell) => {
-        // if (gameboard.board[cell].getValue() !== "") 
-        //     console.log("NOT A VALID MOVE!")
-        //  return;
+        //check empty cell
+        if (gameboard.getBoard()[cell].getValue() !== "") {
+            console.log("NOT A VALID MOVE!!! select a different cell")
+         return;
+        }
         console.log (
-            `Placing ${getActivePlayer().name}\'s ${getActivePlayer().token} in cell ${cell}...`
+            `Placing ${getActivePlayer().name}\'s ${getActivePlayer().marker} in cell ${cell}...`
         )
-        gameboard.placeToken(cell, getActivePlayer().token)
+        gameboard.placeMarker(cell, getActivePlayer().marker)
         /* check winner HERE */
-
+        if (checkWin(gameboard)) {
+            console.log(`${getActivePlayer().name} wins!`);
+            return
+        }
         //change turn
         changeTurn();
         printNewRound();
     }
+    const checkWin = (gameboard) => {
+        const board = gameboard.getBoard();
+        const activePlayerMarker = getActivePlayer().marker;
+        return winConditions.some(combination => {
+            return combination.every(index => {
+                return board[index].getValue() === activePlayerMarker;
+            });
+        });
+    };
     //Initial play game message
     printNewRound();
     //return methods
@@ -103,15 +128,5 @@ function GameController(
     }
 }
 
-const winConditions = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-]
 
 const game = GameController();
