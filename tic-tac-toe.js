@@ -124,9 +124,51 @@ function GameController(
     //return methods
     return {
         playRound,
-        getActivePlayer
+        getActivePlayer,
+        getBoard: gameboard.getBoard
     }
 }
 
+function DisplayController () {
+    // select game 
+    const game = GameController();
+    // select outer game-container where I'll display game info
+    const gameContainer = document.querySelector('.game-container')
+    // select inner board-container where I'll display the board
+    const boardContainer = document.querySelector('.board-container')
+    // function to create the board
+    const updateDisplay = () => {
+        // clear board
+        boardContainer.textContent = "";
+        // get the newest version of the board
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
+        // display the activePlayer's turn
+        gameContainer.textContent = `${activePlayer.name}'s turn. Place an ${activePlayer.marker}`;
+        // render the board
+        board.forEach((cell, index) => {
+            // create button for each cell
+            const cellButton = document.createElement('button');
+            cellButton.classList.add("cell"); //add class of cell
+            // add marker value
+            cellButton.textContent = cell.getValue();
+            cellButton.dataset.cell = index
+            boardContainer.appendChild(cellButton);
+            
+        })
+    }
 
-const game = GameController();
+    // add event listener to the board
+    function clickHandler(e) {
+        const selectedCell = e.target.dataset.cell;
+        if (!selectedCell) return;
+
+        game.playRound(selectedCell);
+        updateDisplay();
+    }
+    boardContainer.addEventListener("click", clickHandler);
+    // initial render board
+    updateDisplay();
+}
+
+DisplayController();
